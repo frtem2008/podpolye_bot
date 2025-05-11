@@ -1,0 +1,38 @@
+import logging
+
+import peewee
+
+from src import log_setup
+from src.database import models
+from src.database.models import db, Users, Roles
+
+logger = log_setup.new_logger('Database', logging.INFO)
+
+
+def init_db():
+    db.connect()
+    with db:
+        db.create_tables([models.Users, models.Roles], safe=True)
+    logger.info('Database initialized')
+
+
+def add_user(user_id: int, username: str, admin_title: str):
+    return Users.get_or_create(user_id=user_id, username=username, admin_title=admin_title)
+
+def add_role(role_name:str):
+    return Roles.create(role_name=role_name)
+
+def get_users():
+    users = []
+    query = models.Users.select()
+    for user in query:
+        users.append(user)
+    return users
+
+
+def get_roles():
+    roles = []
+    query = models.Roles.select()
+    for role in query:
+        roles.append(role)
+    return roles

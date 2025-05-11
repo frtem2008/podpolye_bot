@@ -2,11 +2,10 @@ import datetime
 import logging
 import os
 
-# for telebot itself
-logging.basicConfig(format='[%(levelname) 5s/%(asctime)s] %(name)s: %(message)s', level=logging.WARNING)
-
 log_path = f'../logs/{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
-os.makedirs(log_path)
+if not os.path.exists(log_path):
+    os.makedirs(log_path)
+    logging.basicConfig(format='[%(levelname) 5s/%(asctime)s] %(name)s: %(message)s', level=logging.WARNING)
 
 def new_logger(name: str, level: int) -> logging.Logger:
     log = logging.Logger(name)

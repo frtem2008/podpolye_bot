@@ -1,17 +1,18 @@
 import logging
-import telebot
-from res.credentials import BOT_TOKEN
+
 import log_setup
-
-bot = telebot.TeleBot(BOT_TOKEN)
-
-main_logger = log_setup.new_logger('main', logging.DEBUG)
-
-
-@bot.message_handler(content_types=['text'])
-def get_text_messages(message: telebot.types.Message):
-    main_logger.debug(message)
-
+import bot
+from src.database import database
+from src.handlers.handlers import Ping, UserAdder
 
 if __name__ == '__main__':
-    bot.polling(none_stop=True, interval=0)
+    database.init_db()
+
+    main_logger = log_setup.new_logger('main', logging.DEBUG)
+    main_logger.info("Bot started")
+
+    bot.add_handler(Ping())
+    bot.add_handler(UserAdder())
+
+
+    bot.bot.polling(none_stop=True, interval=0)
