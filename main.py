@@ -11,9 +11,11 @@ async def main():
     bot = Bot(token=BOT_TOKEN)
     # Диспетчер
     dp = Dispatcher()
+
+    dp.include_routers(roles)
     dp.include_routers(ping)
     dp.include_routers(group)
-    dp.include_routers(roles)
+
     await dp.start_polling(bot, imge={})
 
 if __name__ == "__main__":

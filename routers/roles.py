@@ -1,4 +1,4 @@
-from aiogram.filters.command import Command
+from aiogram.filters.command import Command, CommandObject
 from aiogram.filters import StateFilter, BaseFilter
 from aiogram import Router, F, Bot
 from aiogram.types import Message, ChatMemberUpdated, CallbackQuery
@@ -37,6 +37,45 @@ async def delete_group_member(update: types.ChatMemberUpdated):
     # print(update)
     cur.execute("""DELETE FROM "user" WHERE group_id=%s and tg_id=%s""", (update.chat.id, update.new_chat_member.user.id))
     cur.execute("""DELETE FROM "user_role" WHERE user_id=%s and group_id=%s""", (update.new_chat_member.user.id, update.chat.id))
+
+    conn.commit()
+    conn.close()
+
+
+@roles.message(Command("add_role_user", prefix="/!"))
+async def role_user_add(message: Message, bot: Bot, command: CommandObject):
+    args = command.args.split(" ")
+    if len(args) < 2:
+        await message.reply("не правельный синтаксис")
+        return
+    role = args[0]
+    usernames = args[1:]
+
+    if role == "all":
+        await message.answer("Это системная роль")
+        return
+
+    conn, cur = get_db_connection()
+    cur.execute("""SELECT id FROM "role" WHERE group_id=%s AND name=%s""", (message.chat.id, role))
+
+    role_id = cur.fetchone()
+    if role_id is None:
+        await message.reply("нет такоой роли")
+        return
+    # print(role_id)
+    for username in usernames:
+        if username[0] == "@":
+            username = username[1:]
+
+        cur.execute("""SELECT * FROM "user" WHERE group_id=%s AND username=%s""", (message.chat.id, username))
+        user_id = cur.fetchone()
+        print(message.chat.id, username)
+        if user_id is None:
+            await message.answer(f"Нет такого пользователя, {username}")
+            continue
+
+        cur.execute("""INSERT INTO "user_role" (role_id, user_id, group_id) VALUES (%s, %s, %s)""", (role_id, user_id[1], message.chat.id))
+        await message.answer(f"Пользователь {username}, добавлен в роль {role}")
 
     conn.commit()
     conn.close()

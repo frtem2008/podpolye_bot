@@ -1,4 +1,4 @@
-from aiogram.filters.command import Command
+from aiogram.filters.command import Command, CommandObject
 from aiogram.filters import StateFilter, BaseFilter
 from aiogram import Router, F, Bot
 from aiogram.types import Message, ChatMemberUpdated, CallbackQuery
@@ -41,9 +41,3 @@ async def test(message: Message, bot: Bot):
         await message.answer("@"+answer)
 
     conn.close()
-
-
-
-
-
-

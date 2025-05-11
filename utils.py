@@ -1,10 +1,18 @@
+import aiogram.exceptions
 from aiogram import Bot
 from telethon import TelegramClient
+from telethon.tl.functions.users import GetFullUserRequest
 from setting import *
 
-async def get_chat_members(chat_id, bot: Bot):
-    client = TelegramClient("Имя | Бот", api_id=API_ID, api_hash=API_HASH)
+
+async def get_telegram_api_conn():
+    client = TelegramClient("test", api_id=API_ID, api_hash=API_HASH)
     await client.start(bot_token=BOT_TOKEN)
+    return client
+
+
+async def get_chat_members(chat_id, bot: Bot):
+    client = await get_telegram_api_conn()
     chat_members = []
 
     async for member in client.iter_participants(chat_id):
