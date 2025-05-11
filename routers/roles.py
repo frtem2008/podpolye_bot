@@ -1,11 +1,8 @@
 from aiogram.filters.command import Command, CommandObject
-from aiogram.filters import StateFilter, BaseFilter
-from aiogram import Router, F, Bot
-from aiogram.types import Message, ChatMemberUpdated, CallbackQuery
-from aiogram.fsm.context import FSMContext
-from aiogram.fsm.state import StatesGroup, State
+from aiogram import Router,Bot
+from aiogram.types import Message
 from aiogram.filters.chat_member_updated import \
-    ChatMemberUpdatedFilter, IS_NOT_MEMBER, ADMINISTRATOR, IS_MEMBER
+    ChatMemberUpdatedFilter, IS_NOT_MEMBER, IS_MEMBER
 from aiogram import types
 from aiogram.enums import ParseMode
 
@@ -43,7 +40,7 @@ async def delete_group_member(update: types.ChatMemberUpdated):
 
 
 @roles.message(Command("add_role_user", prefix="/!"))
-async def role_user_add(message: Message, bot: Bot, command: CommandObject):
+async def role_user_add(message: Message, command: CommandObject):
     args = command.args.split(" ")
     if len(args) < 2:
         await message.reply("не правельный синтаксис")
@@ -79,3 +76,27 @@ async def role_user_add(message: Message, bot: Bot, command: CommandObject):
 
     conn.commit()
     conn.close()
+
+
+@roles.message(Command("new_role", prefix="/!"))
+async def new_role_add(message: Message, command: Command):
+    if command.args is None or " " in command.args or "@" in command.args:
+        await message.reply("неправильное использование аргументов")
+        return
+
+    role_name = command.args
+    conn, cur = get_db_connection()
+    cur.execute("""SELECT * FROM "role" WHERE group_id=%s and name=%s""", (message.chat.id, role_name))
+
+    if not cur.fetchone() is None:
+        await message.reply("Роль с таким именем есть")
+        return
+
+    cur.execute("""INSERT INTO "role" (group_id, name) VALUES (%s, %s)""", (message.chat.id, role_name))
+    await message.answer(f"роль создана {role_name}")
+
+    conn.commit()
+    conn.close()
+
+
+

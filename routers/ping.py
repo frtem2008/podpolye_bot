@@ -1,13 +1,5 @@
-from aiogram.filters.command import Command, CommandObject
-from aiogram.filters import StateFilter, BaseFilter
 from aiogram import Router, F, Bot
-from aiogram.types import Message, ChatMemberUpdated, CallbackQuery
-from aiogram.fsm.context import FSMContext
-from aiogram.fsm.state import StatesGroup, State
-from aiogram.filters.chat_member_updated import \
-    ChatMemberUpdatedFilter, IS_NOT_MEMBER, ADMINISTRATOR, IS_MEMBER
-from aiogram import types
-from aiogram.enums import ParseMode
+from aiogram.types import Message
 
 from utils import role_in_message, get_users
 from filters.chat_type import ChatTypeFilter

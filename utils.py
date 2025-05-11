@@ -1,7 +1,5 @@
-import aiogram.exceptions
 from aiogram import Bot
 from telethon import TelegramClient
-from telethon.tl.functions.users import GetFullUserRequest
 from setting import *
 
 
