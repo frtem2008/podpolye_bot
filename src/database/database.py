@@ -21,16 +21,8 @@ def add_role(role_name:str):
     return Roles.create(role_name=role_name)
 
 def get_users():
-    users = []
-    query = models.Users.select()
-    for user in query:
-        users.append(user)
-    return users
+    return list(Users.select())
 
 
 def get_roles():
-    roles = []
-    query = models.Roles.select()
-    for role in query:
-        roles.append(role)
-    return roles
+    return list(Roles.select())
