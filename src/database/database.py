@@ -1,7 +1,5 @@
 import logging
 
-import peewee
-
 from src import log_setup
 from src.database import models
 from src.database.models import db, Users, Roles

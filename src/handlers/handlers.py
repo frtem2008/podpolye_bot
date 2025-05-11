@@ -28,7 +28,8 @@ class UserAdder(Handler):
         title = ''
         for admin in admins:
             if admin.user.id == message.from_user.id:
-                 title = admin.custom_title
+                title = admin.custom_title
+                break
 
         database.add_user(message.from_user.id, message.from_user.username, title)
         self.log.info(f"User {message.from_user.id} added to database with title {title}")
