@@ -6,7 +6,6 @@ from src.database.models import db, Users, Roles
 
 logger = log_setup.new_logger('Database', logging.INFO)
 
-
 def init_db():
     db.connect()
     with db:
@@ -15,10 +14,13 @@ def init_db():
 
 
 def add_user(user_id: int, username: str, admin_title: str):
-    return Users.get_or_create(user_id=user_id, username=username, admin_title=admin_title)
+    return Users.create(user_id=user_id, username=username, admin_title=admin_title)
 
 def add_role(role_name:str):
     return Roles.create(role_name=role_name)
+
+def update_user(user_id: int, username: str, admin_title: str):
+    return Users.update(user_id=user_id, username=username, admin_title=admin_title)
 
 def get_users():
     return list(Users.select())

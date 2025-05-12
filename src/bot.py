@@ -17,4 +17,5 @@ def add_handler(handler: handlers.handlers.Handler):
 @bot.message_handler()
 def handle_message(message: telebot.types.Message):
     for handler in bot_handlers:
-        handler.handle(message)
+        if handler.can_handle(message):
+            handler.handle(message)

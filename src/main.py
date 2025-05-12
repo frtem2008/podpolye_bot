@@ -3,7 +3,7 @@ import logging
 import log_setup
 import bot
 from src.database import database
-from src.handlers.handlers import Ping, UserAdder
+from src.handlers.handlers import Ping, TitleAdder
 
 if __name__ == '__main__':
     database.init_db()
@@ -12,7 +12,7 @@ if __name__ == '__main__':
     main_logger.info("Bot started")
 
     bot.add_handler(Ping())
-    bot.add_handler(UserAdder())
+    bot.add_handler(TitleAdder())
 
 
     bot.bot.polling(none_stop=True, interval=0)
