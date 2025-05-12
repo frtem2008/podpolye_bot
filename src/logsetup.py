@@ -16,13 +16,8 @@ def new_logger(name: str, level: int) -> logging.Logger:
     streamHandler.setFormatter(formatter)
     log.addHandler(streamHandler)
 
-    file_handler = logging.FileHandler(f'{log_path}/{name}.log')
+    file_handler = logging.FileHandler(f'{log_path}/bot.log')
     file_handler.setFormatter(formatter)
     log.addHandler(file_handler)
 
     return log
-
-class Loggable:
-    def __init__(self, suffix: str) -> None:
-        self.log = new_logger(f'{self.__class__.__name__} {suffix}', logging.DEBUG)
-        self.log.info("Initialized")

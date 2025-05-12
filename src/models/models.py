@@ -20,4 +20,5 @@ class Roles(BaseModel):
     name = peewee.CharField(unique=True)
     users = peewee.ManyToManyField(Users, backref='roles')
 
+
 UserRoles = Roles.users.get_through_model()

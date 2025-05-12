@@ -1,16 +1,15 @@
 import logging
 
 from src import logsetup
-from src.database import models
-from src.database.models import db, Users, Roles, UserRoles
+from src.models import models
+from src.models.models import db, Users, Roles, UserRoles
 
 logger = logsetup.new_logger('Database', logging.INFO)
 
 
 def init_db():
     db.connect()
-    with db:
-        db.create_tables([models.Users, models.Roles, models.UserRoles], safe=True)
+    db.create_tables([models.Users, models.Roles, models.UserRoles], safe=True)
     logger.info('Database initialized')
 
 
@@ -33,6 +32,7 @@ def get_user(username: str):
 def get_role(name: str):
     return Roles.get_or_none(name=name)
 
+
 def get_roles():
     return map(lambda role: role.name, list(Roles.select()))
 
@@ -48,8 +48,10 @@ def update_user(user_id: int, username: str, admin_title: str):
 def give_role(user_id: int, role: str):
     return Users.get(user_id=user_id).roles.add(Roles.get(name=role))
 
+
 def remove_role(user_id: int, role: str):
     return Users.get(user_id=user_id).roles.remove(Roles.get(name=role))
+
 
 def delete_role(role: str):
     UserRoles.delete().where((UserRoles.roles_id == Roles.get(name=role))).execute()

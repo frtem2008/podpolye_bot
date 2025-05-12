@@ -1,22 +1,30 @@
-import logging
-
 import telebot
-import handlers.handlers
-from res.credentials import BOT_TOKEN
-from src import logsetup
+from telebot import apihelper
+from telebot.custom_filters import ChatFilter
 
-bot = telebot.TeleBot(BOT_TOKEN)
-bot_logger = logsetup.new_logger('main', logging.DEBUG)
-bot_handlers = []
+from res.credentials import BOT_TOKEN, PODPOLYE_ID
+from src.filters.filters import OneArgumentFilter, TwoArgumentsFilter
+from src.handlers.RoleHandlers import createRoleHandler, deleteRoleHandler, selfRollerHandler, selfUnrollerHandler, userRollerHandler, userUnrollerHandler
+from src.middleware.UserHandlers import userMessageHandler
+
+apihelper.ENABLE_MIDDLEWARE = True
+
+bot = telebot.TeleBot(BOT_TOKEN, num_threads=5)
 
 
-def add_handler(handler: handlers.handlers.Handler):
-    bot_handlers.append(handler)
-    handler.bot = bot
+def register_handlers():
+    bot.register_message_handler(createRoleHandler, commands=["createrole"], chat_id=[PODPOLYE_ID], pass_bot=True)
+    bot.register_message_handler(deleteRoleHandler, commands=["deleterole"], chat_id=[PODPOLYE_ID], pass_bot=True)
+    bot.register_message_handler(userRollerHandler, commands=["role"], twoarguments=True, chat_id=[PODPOLYE_ID], pass_bot=True)
+    bot.register_message_handler(userUnrollerHandler, commands=["unrole"], twoarguments=True, chat_id=[PODPOLYE_ID], pass_bot=True)
+    bot.register_message_handler(selfRollerHandler, commands=["role"], oneargument=True, chat_id=[PODPOLYE_ID], pass_bot=True)
+    bot.register_message_handler(selfUnrollerHandler, commands=["unrole"], oneargument=True, chat_id=[PODPOLYE_ID], pass_bot=True)
 
 
-@bot.message_handler()
-def handle_message(message: telebot.types.Message):
-    for handler in bot_handlers:
-        if handler.can_handle(message):
-            handler.handle(message)
+bot.register_middleware_handler(userMessageHandler, update_types=['message'])
+
+bot.add_custom_filter(ChatFilter())
+bot.add_custom_filter(OneArgumentFilter())
+bot.add_custom_filter(TwoArgumentsFilter())
+
+register_handlers()
