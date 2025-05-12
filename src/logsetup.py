@@ -7,6 +7,7 @@ if not os.path.exists(log_path):
     os.makedirs(log_path)
     logging.basicConfig(format='[%(levelname) 5s/%(asctime)s] %(name)s: %(message)s', level=logging.WARNING)
 
+
 def new_logger(name: str, level: int) -> logging.Logger:
     log = logging.Logger(name)
     log.setLevel(level)
@@ -20,3 +21,8 @@ def new_logger(name: str, level: int) -> logging.Logger:
     log.addHandler(file_handler)
 
     return log
+
+class Loggable:
+    def __init__(self, suffix: str) -> None:
+        self.log = new_logger(f'{self.__class__.__name__} {suffix}', logging.DEBUG)
+        self.log.info("Initialized")

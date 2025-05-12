@@ -2,12 +2,13 @@ import logging
 
 import telebot
 import handlers.handlers
-from res.credentials import BOT_TOKEN, PODPOLYE_ID
-from src import log_setup
+from res.credentials import BOT_TOKEN
+from src import logsetup
 
 bot = telebot.TeleBot(BOT_TOKEN)
-bot_logger = log_setup.new_logger('main', logging.DEBUG)
+bot_logger = logsetup.new_logger('main', logging.DEBUG)
 bot_handlers = []
+
 
 def add_handler(handler: handlers.handlers.Handler):
     bot_handlers.append(handler)

@@ -1,30 +1,56 @@
 import logging
 
-from src import log_setup
+from src import logsetup
 from src.database import models
-from src.database.models import db, Users, Roles
+from src.database.models import db, Users, Roles, UserRoles
 
-logger = log_setup.new_logger('Database', logging.INFO)
+logger = logsetup.new_logger('Database', logging.INFO)
+
 
 def init_db():
     db.connect()
     with db:
-        db.create_tables([models.Users, models.Roles], safe=True)
+        db.create_tables([models.Users, models.Roles, models.UserRoles], safe=True)
     logger.info('Database initialized')
 
 
-def add_user(user_id: int, username: str, admin_title: str):
+def create_user(user_id: int, username: str, admin_title: str):
     return Users.create(user_id=user_id, username=username, admin_title=admin_title)
 
-def add_role(role_name:str):
-    return Roles.create(role_name=role_name)
 
-def update_user(user_id: int, username: str, admin_title: str):
-    return Users.update(user_id=user_id, username=username, admin_title=admin_title)
+def create_role(name: str):
+    return Roles.create(name=name)
+
 
 def get_users():
     return list(Users.select())
 
 
+def get_user(username: str):
+    return Users.get_or_none(username=username)
+
+
+def get_role(name: str):
+    return Roles.get_or_none(name=name)
+
 def get_roles():
-    return list(Roles.select())
+    return map(lambda role: role.name, list(Roles.select()))
+
+
+def get_user_roles(user_id: int):
+    return [role.name for role in Users.get(user_id=user_id).roles]
+
+
+def update_user(user_id: int, username: str, admin_title: str):
+    return Users.update(user_id=user_id, username=username, admin_title=admin_title)
+
+
+def give_role(user_id: int, role: str):
+    return Users.get(user_id=user_id).roles.add(Roles.get(name=role))
+
+def remove_role(user_id: int, role: str):
+    return Users.get(user_id=user_id).roles.remove(Roles.get(name=role))
+
+def delete_role(role: str):
+    UserRoles.delete().where((UserRoles.roles_id == Roles.get(name=role))).execute()
+    Roles.get(name=role).delete_instance()
