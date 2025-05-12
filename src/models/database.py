@@ -41,6 +41,10 @@ def get_user_roles(user_id: int):
     return [role.name for role in Users.get(user_id=user_id).roles]
 
 
+def get_role_users(role: str):
+    return [user for user in Roles.get(name=role).users]
+
+
 def update_user(user_id: int, username: str, admin_title: str):
     return Users.update(user_id=user_id, username=username, admin_title=admin_title)
 

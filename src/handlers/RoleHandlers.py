@@ -78,3 +78,20 @@ def userRollerHandler(message: telebot.types.Message, bot: telebot.TeleBot):
 def userUnrollerHandler(message: telebot.types.Message, bot: telebot.TeleBot):
     username, role_name = telebot.util.extract_arguments(message.text).strip().split()
     unrole(username, role_name)
+
+def pingRoleHandler(message: telebot.types.Message, bot: telebot.TeleBot):
+    role_name = telebot.util.extract_arguments(message.text).strip()
+    if not database.get_role(role_name):
+        bot_logger.info(f'Role {role_name} does not exist')
+        return
+
+    to_ping = database.get_role_users(role_name)
+    msg = ''
+    for user in to_ping:
+        msg += f'[@{user.username}](tg://user?id={user.user_id}) '
+
+    if msg:
+        bot_logger.info(f"Ping message for {role_name}: {msg}")
+        bot.send_message(message.chat.id, msg.strip(), parse_mode='Markdown')
+    else:
+        bot_logger.info(f"Nobody to ping for {role_name}")
