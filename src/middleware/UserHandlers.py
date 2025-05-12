@@ -5,7 +5,7 @@ import telebot
 from src import logsetup
 from src.models import models, database
 
-bot_logger = logsetup.new_logger('main', logging.DEBUG)
+bot_logger = logsetup.new_logger('bot', logging.INFO)
 
 
 def user_fmt(to_format: telebot.types.User | models.Users) -> str:
