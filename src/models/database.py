@@ -2,14 +2,14 @@ import logging
 
 from src import logsetup
 from src.models import models
-from src.models.models import db, Users, Roles, UserRoles
+from src.models.models import db, Users, Roles, UserRoles, UserStatistics
 
 logger = logsetup.new_logger('Database', logging.INFO)
 
 
 def init_db():
     db.connect()
-    db.create_tables([models.Users, models.Roles, models.UserRoles], safe=True)
+    db.create_tables([models.Users, models.Roles, models.UserRoles, models.UserStatistics], safe=True)
     logger.info('Database initialized')
 
 
@@ -60,3 +60,26 @@ def remove_role(user_id: int, role: str):
 def delete_role(role: str):
     UserRoles.delete().where((UserRoles.roles_id == Roles.get(name=role))).execute()
     Roles.get(name=role).delete_instance()
+
+
+def count_mes_pl(user_id: int):
+    user = UserStatistics.get(id=user_id)
+    user.count_messege = 1 + user.count_messege1
+    user.save()
+
+
+def count_goida_pl(user_id: int):
+    user = UserStatistics.get(id=user_id)
+    user.count_goida = 1 + user.count_goida
+    user.save()
+
+
+def get_statistics():
+    return UserStatistics.select()
+
+
+def create_user_statistics(user_id: int, username: str):
+    return UserStatistics.create(id=user_id, count_messege=0, count_goida=0, username=username)
+
+
+
