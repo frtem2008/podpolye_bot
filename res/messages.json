@@ -11,5 +11,15 @@
   "role": "{user} is now {role_name}",
   "unrole": "{user} is no more {role_name}",
   "ping": "PING {role_name}! {users}",
-  "nobody to ping": "Nobody to ping for {role_name} :("
+  "nobody to ping": "Nobody to ping for {role_name} :(",
+  "chanced": {
+    "av sleep": {
+      "text": "АВ ждёт тебя во сне с шансом в {chance_percent}%",
+      "chance": 0.1
+    },
+    "av awake": {
+      "text": "АВ ждёт тебя НА РАБОТЕ шансом в {chance}",
+      "chance": 0.1
+    }
+  }
 }
