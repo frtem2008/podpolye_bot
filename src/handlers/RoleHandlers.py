@@ -10,16 +10,18 @@ from src.models.models import Users
 # TODO: Заменить все проверки на регулярки
 # TODO: Сообщения об ошибках в пользовательском вводе
 
-def link_to(user: Users):
+def link_to(user: Users) -> str:
     return f'[@{user.username}](tg://user?id={user.user_id})'
 
 
-def send_message(bot: telebot.TeleBot, chat_id: int, name: str, **kwargs):
+def send_message(bot: telebot.TeleBot, chat_id: int, name: str, **kwargs) -> None:
     bot.send_message(chat_id, messages.format_normal(name, **kwargs), parse_mode='Markdown')
 
 
-def exists(bot: telebot.TeleBot, message: telebot.types.Message, username: str | None, role_name: str | None,
-           send_username_message=True, send_role_message: bool = True) -> bool:
+def exists(
+        bot: telebot.TeleBot, message: telebot.types.Message, username: str | None, role_name: str | None,
+        send_username_message=True, send_role_message=True
+) -> bool:
     if username and not database.get_user(username):
         bot_logger.info(f"User {username} not found")
         if send_username_message:
@@ -33,13 +35,13 @@ def exists(bot: telebot.TeleBot, message: telebot.types.Message, username: str |
     return True
 
 
-def role(bot: telebot.TeleBot, message: telebot.types.Message, username: str, role_name: str):
+def role(bot: telebot.TeleBot, message: telebot.types.Message, username: str, role_name: str) -> None:
     username = username.replace("@", "")
     if not exists(bot, message, username, role_name):
         return
 
     user = database.get_user(username)
-    if role_name in database.get_user_roles(user.user_id):
+    if role_name in database.get_user_role_names(user.user_id):
         bot_logger.info(f"User {user_fmt(user)} already has role {role_name}")
         send_message(bot, message.chat.id, 'user already has role', user=link_to(user), role_name=role_name)
         return
@@ -49,12 +51,12 @@ def role(bot: telebot.TeleBot, message: telebot.types.Message, username: str, ro
     send_message(bot, message.chat.id, 'role', user=link_to(user), role_name=role_name)
 
 
-def unrole(bot: telebot.TeleBot, message: telebot.types.Message, username: str, role_name: str):
+def unrole(bot: telebot.TeleBot, message: telebot.types.Message, username: str, role_name: str) -> None:
     username = username.replace("@", "")
     if not exists(bot, message, username, role_name):
         return
     user = database.get_user(username)
-    if not role_name in database.get_user_roles(user.user_id):
+    if not role_name in database.get_user_role_names(user.user_id):
         bot_logger.info(f"User {user_fmt(user)} does not have role {role_name}")
         send_message(bot, message.chat.id, 'user does not have role', user=link_to(user), role_name=role_name)
         return
@@ -64,7 +66,7 @@ def unrole(bot: telebot.TeleBot, message: telebot.types.Message, username: str, 
     send_message(bot, message.chat.id, 'unrole', user=link_to(user), role_name=role_name)
 
 
-def createRoleHandler(message: telebot.types.Message, bot: telebot.TeleBot):
+def createRoleHandler(message: telebot.types.Message, bot: telebot.TeleBot) -> None:
     role_name = telebot.util.extract_arguments(message.text).strip()
     if exists(bot, message, None, role_name, send_role_message=False):
         send_message(bot, message.chat.id, 'role already exists', role_name=role_name)
@@ -75,7 +77,7 @@ def createRoleHandler(message: telebot.types.Message, bot: telebot.TeleBot):
     bot_logger.info(f"Created role {role_name}")
 
 
-def deleteRoleHandler(message: telebot.types.Message, bot: telebot.TeleBot):
+def deleteRoleHandler(message: telebot.types.Message, bot: telebot.TeleBot) -> None:
     role_name = telebot.util.extract_arguments(message.text).strip()
     if not exists(bot, message, None, role_name):
         return
@@ -84,27 +86,27 @@ def deleteRoleHandler(message: telebot.types.Message, bot: telebot.TeleBot):
     bot_logger.info(f"Deleted role {role_name}")
 
 
-def selfRollerHandler(message: telebot.types.Message, bot: telebot.TeleBot):
+def selfRollerHandler(message: telebot.types.Message, bot: telebot.TeleBot) -> None:
     role_name = telebot.util.extract_arguments(message.text).strip()
     role(bot, message, message.from_user.username, role_name)
 
 
-def selfUnrollerHandler(message: telebot.types.Message, bot: telebot.TeleBot):
+def selfUnrollerHandler(message: telebot.types.Message, bot: telebot.TeleBot) -> None:
     role_name = telebot.util.extract_arguments(message.text).strip()
     unrole(bot, message, message.from_user.username, role_name)
 
 
-def userRollerHandler(message: telebot.types.Message, bot: telebot.TeleBot):
+def userRollerHandler(message: telebot.types.Message, bot: telebot.TeleBot) -> None:
     username, role_name = telebot.util.extract_arguments(message.text).strip().split()
     role(bot, message, username, role_name)
 
 
-def userUnrollerHandler(message: telebot.types.Message, bot: telebot.TeleBot):
+def userUnrollerHandler(message: telebot.types.Message, bot: telebot.TeleBot) -> None:
     username, role_name = telebot.util.extract_arguments(message.text).strip().split()
     unrole(bot, message, username, role_name)
 
 
-def pingRoleHandler(message: telebot.types.Message, bot: telebot.TeleBot):
+def pingRoleHandler(message: telebot.types.Message, bot: telebot.TeleBot) -> None:
     role_name = telebot.util.extract_arguments(message.text).strip()
     if not exists(bot, message, None, role_name):
         return

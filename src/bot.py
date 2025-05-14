@@ -5,7 +5,7 @@ from telebot.custom_filters import ChatFilter
 from res.credentials import BOT_TOKEN, PODPOLYE_ID
 from src.filters.filters import OneArgumentFilter, TwoArgumentsFilter
 from src.handlers.RoleHandlers import createRoleHandler, deleteRoleHandler, selfRollerHandler, selfUnrollerHandler, userRollerHandler, userUnrollerHandler, pingRoleHandler
-from src.middleware.ChancedEventsHandlers import message_chanse_trigger_hanlder
+from src.middleware.TriggeredMessageHandler import triggeredMessageHandler
 from src.middleware.UserHandlers import userMessageHandler
 
 apihelper.ENABLE_MIDDLEWARE = True
@@ -13,7 +13,7 @@ apihelper.ENABLE_MIDDLEWARE = True
 bot = telebot.TeleBot(BOT_TOKEN, num_threads=5)
 
 bot.register_middleware_handler(userMessageHandler)
-bot.register_middleware_handler(message_chanse_trigger_hanlder, update_types=["message"])
+bot.register_middleware_handler(triggeredMessageHandler)
 
 bot.add_custom_filter(ChatFilter())
 bot.add_custom_filter(OneArgumentFilter())
