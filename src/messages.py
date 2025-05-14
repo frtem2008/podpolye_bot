@@ -15,6 +15,7 @@ def edit_kwags(j: dict, kwargs: dict):
         kwargs[item[0]] = item[1]
 
 
+# TODO: Add reply option for normal messages too
 def format_normal(name: str, **kwargs):
     edit_kwags(messages, kwargs)
     return messages[name].format(**kwargs)
