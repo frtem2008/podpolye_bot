@@ -1,17 +1,21 @@
 import telebot
 
-from src.messages import msg
+from src import messages
 from src.middleware.UserHandlers import user_fmt, bot_logger
 from src.models import database
 from src.models.models import Users
 
+
+# TODO: Права доступа
+# TODO: Заменить все проверки на регулярки
+# TODO: Сообщения об ошибках в пользовательском вводе
 
 def link_to(user: Users):
     return f'[@{user.username}](tg://user?id={user.user_id})'
 
 
 def send_message(bot: telebot.TeleBot, chat_id: int, name: str, **kwargs):
-    bot.send_message(chat_id, msg(name, **kwargs), parse_mode='Markdown')
+    bot.send_message(chat_id, messages.format_normal(name, **kwargs), parse_mode='Markdown')
 
 
 def exists(bot: telebot.TeleBot, message: telebot.types.Message, username: str | None, role_name: str | None,

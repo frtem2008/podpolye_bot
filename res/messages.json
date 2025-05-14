@@ -20,6 +20,14 @@
     "av awake": {
       "text": "АВ ждёт тебя НА РАБОТЕ шансом в {chance}",
       "chance": 0.1
+    },
+    "pon": {
+      "text": "Пон, ебать его за ногу!",
+      "chance": 1,
+      "triggers": {
+        "text matches": ".*пон.*"
+      },
+      "reply": true
     }
   }
 }

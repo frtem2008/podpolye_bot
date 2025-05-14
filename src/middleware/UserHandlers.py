@@ -29,7 +29,11 @@ def import_users():
         user_titles[user.user_id] = None
 
 
-def userMessageHandler(bot: telebot.TeleBot, message: telebot.types.Message):
+def userMessageHandler(bot: telebot.TeleBot, update: telebot.types.Update):
+    message = update.message
+    if not message:
+        return
+
     title = get_title(bot, message)
     bot_logger.debug(f'Title for {user_fmt(message.from_user)}: {title}')
     user_id = message.from_user.id
