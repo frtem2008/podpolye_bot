@@ -6,8 +6,8 @@ from watchdog.observers import Observer
 
 from src.middleware.UserHandlers import bot_logger
 
-messages = {}
-chanced_messages = {}
+messages_dict = {}
+chanced_messages_dict = {}
 
 
 def edit_kwags(j: dict, kwargs: dict):
@@ -17,27 +17,27 @@ def edit_kwags(j: dict, kwargs: dict):
 
 # TODO: Add reply option for normal messages too
 def format_normal(name: str, **kwargs):
-    edit_kwags(messages, kwargs)
-    return messages[name].format(**kwargs)
+    edit_kwags(messages_dict, kwargs)
+    return messages_dict[name].format(**kwargs)
 
 
 def format_chanced(name: str, **kwargs):
-    edit_kwags(chanced_messages[name], kwargs)
-    kwargs['chance_percent'] = chanced_messages[name]['chance'] * 100
-    reply = chanced_messages[name]['reply'] if 'reply' in chanced_messages[name] else None
-    return chanced_messages[name]['chance'], chanced_messages[name]['text'].format(**kwargs), reply
+    edit_kwags(chanced_messages_dict[name], kwargs)
+    kwargs['chance_percent'] = chanced_messages_dict[name]['chance'] * 100
+    reply = chanced_messages_dict[name]['reply'] if 'reply' in chanced_messages_dict[name] else None
+    return chanced_messages_dict[name]['chance'], chanced_messages_dict[name]['text'].format(**kwargs), reply
 
 
 def is_conditional(name):
-    return "triggers" in chanced_messages[name]
+    return "triggers" in chanced_messages_dict[name]
 
 
 def triggers(name: str):
-    return chanced_messages[name]['triggers']
+    return chanced_messages_dict[name]['triggers']
 
 
 def chancedNames():
-    return [m for m in chanced_messages.keys()]
+    return [m for m in chanced_messages_dict.keys()]
 
 
 # TODO add picture, sticker, audio, etc triggers
@@ -48,19 +48,19 @@ def process_triggers(params: dict):
 
 
 def reload(name: str):
-    global messages, chanced_messages
+    global messages_dict, chanced_messages_dict
 
     with open(f'./res/{name}.json') as f:
-        messages = json.load(f)
-        chanced_messages = messages["chanced"]
-        for name, params in chanced_messages.items():
+        messages_dict = json.load(f)
+        chanced_messages_dict = messages_dict["chanced"]
+        for name, params in chanced_messages_dict.items():
             bot_logger.info(f'Message name: {name}; send params: {params}')
             process_triggers(params)
 
-        chanced_messages[name] = params
+        chanced_messages_dict[name] = params
 
-    bot_logger.info(messages)
-    bot_logger.info(chanced_messages)
+    bot_logger.info(messages_dict)
+    bot_logger.info(chanced_messages_dict)
 
     bot_logger.info('Messages reloaded')
 
@@ -72,7 +72,7 @@ class MessagesUpdateHandler(FileSystemEventHandler):
             reload('messages')
 
 
-if not messages:
+if not messages_dict:
     reload('messages')
 
     observer = Observer()
