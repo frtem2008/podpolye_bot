@@ -7,8 +7,10 @@ from src.middleware.UserHandlers import bot_logger
 
 messages = {}
 
+
 def msg(name: str, **kwargs):
     return messages[name].format(**kwargs)
+
 
 def reload(name: str):
     global messages
@@ -25,6 +27,7 @@ class MessagesUpdateHandler(FileSystemEventHandler):
         if event.src_path == 'res/messages.json':
             bot_logger.info(event)
             reload('messages')
+
 
 if not messages:
     reload('messages')
