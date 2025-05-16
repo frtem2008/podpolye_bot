@@ -1,13 +1,12 @@
 import json
 import re
-from typing import Any
 
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
 from src.middleware.UserHandlers import bot_logger
 
-messages_dict = {}
+message_dict = {}
 random_messages = {}
 
 
@@ -18,8 +17,8 @@ def edit_kwags(j: dict, kwargs: dict) -> None:
 
 # TODO: Add reply option for normal messages too
 def format_normal(name: str, **kwargs) -> str:
-    edit_kwags(messages_dict, kwargs)
-    return messages_dict[name].format(**kwargs)
+    edit_kwags(message_dict, kwargs)
+    return message_dict[name].format(**kwargs)
 
 
 def format_random(name: str, **kwargs) -> tuple[float, str, bool]:
@@ -50,18 +49,18 @@ def process_triggers(params: dict) -> None:
 
 
 def reload() -> None:
-    global messages_dict, random_messages
+    global message_dict, random_messages
 
     with open(f'res/messages.json') as f:
-        messages_dict = json.load(f)
-        random_messages = messages_dict["random"]
+        message_dict = json.load(f)
+        random_messages = message_dict["random"]
         for name, params in random_messages.items():
             bot_logger.info(f'Message name: {name}; send params: {params}')
             process_triggers(params)
 
         random_messages[name] = params
 
-    bot_logger.info(messages_dict)
+    bot_logger.info(message_dict)
     bot_logger.info(random_messages)
 
     bot_logger.info('Messages reloaded')
@@ -74,7 +73,7 @@ class MessagesUpdateHandler(FileSystemEventHandler):
             reload()
 
 
-if not messages_dict:
+if not message_dict:
     reload()
 
     observer = Observer()
