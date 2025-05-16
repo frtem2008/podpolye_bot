@@ -6,7 +6,7 @@ from res.credentials import BOT_TOKEN, PODPOLYE_ID
 from src.filters.filters import OneArgumentFilter, TwoArgumentsFilter
 from src.handlers.RoleHandlers import createRoleHandler, deleteRoleHandler, selfRollerHandler, selfUnrollerHandler, userRollerHandler, userUnrollerHandler, pingRoleHandler
 from src.middleware.UserHandlers import userMessageHandler
-from src.handlers.stat_hendlers import printStatHendlers
+from src.handlers.stat_hendlers import printStatHendlers, staticticHendlers
 
 apihelper.ENABLE_MIDDLEWARE = True
 
@@ -22,6 +22,7 @@ def register_handlers():
     bot.register_message_handler(selfUnrollerHandler, commands=["unrole"], oneargument=True, chat_id=[PODPOLYE_ID], pass_bot=True)
     bot.register_message_handler(pingRoleHandler, commands=["ping"], oneargument=True, chat_id=[PODPOLYE_ID], pass_bot=True)
     bot.register_message_handler(printStatHendlers, commands=["stat"], pass_bot=True, chat_id=[PODPOLYE_ID])
+    bot.register_message_handler(staticticHendlers, chat_id=[PODPOLYE_ID], pass_bot=True)
 
 
 bot.register_middleware_handler(userMessageHandler, update_types=['message'])

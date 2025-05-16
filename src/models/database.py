@@ -65,18 +65,18 @@ def delete_role(role: str):
 
 def count_mes_pl(user_id: int):
     user = UserStatistics.get(id=user_id)
-    user.count_messege = 1 + user.count_messege1
+    user.count_messege = 1 + user.count_messege
     user.save()
 
 
-def count_goida_pl(user_id: int):
+def count_rofls_pl(user_id: int):
     user = UserStatistics.get(id=user_id)
-    user.count_goida = 1 + user.count_goida
+    user.count_rolfs = 1 + user.count_rolfs
     user.save()
 
 
-def get_statistics_by_id(id: int) -> UserStatistics:
-    return UserStatistics.get(id=id)
+def get_statistics_by_id(id: int) -> UserStatistics | None:
+    return UserStatistics.get_or_none(id=id)
 
 
 def get_all_statistics() -> list[UserStatistics]:
@@ -86,12 +86,12 @@ def get_all_statistics() -> list[UserStatistics]:
 def zeroing_statistics(user_id: int):
     user = UserStatistics.get(id=user_id)
     user.count_messege = 0
-    user.count_goida = 0
+    user.count_rolfs = 0
     user.save()
 
 
 def create_user_statistics(user_id: int, username: str):
-    return UserStatistics.create(id=user_id, count_messege=0, count_goida=0, username=username)
+    return UserStatistics.create(id=user_id, count_messege=0, count_rolfs=0, username=username)
 
 
 

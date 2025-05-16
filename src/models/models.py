@@ -24,7 +24,7 @@ class Roles(BaseModel):
 class UserStatistics(BaseModel):
     id = peewee.IntegerField(primary_key=True)
     count_messege = peewee.IntegerField(null=True)
-    count_goida = peewee.IntegerField(null=True)
+    count_rolfs = peewee.IntegerField(null=True)
     username = peewee.CharField(unique=True)
 
 

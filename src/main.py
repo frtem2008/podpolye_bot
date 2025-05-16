@@ -18,5 +18,5 @@ if __name__ == '__main__':
 
     main_logger = logsetup.new_logger('main', logging.DEBUG)
     main_logger.info("Bot started")
-    start_schedule()
+    # start_schedule()
     bot.bot.polling(none_stop=True, interval=0)

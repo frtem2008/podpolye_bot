@@ -14,6 +14,8 @@
   "stat": "{user}:\n\tcount message: {count_mes}\n\tcount rofl: {count_rofl}",
   "text_sep": "\n=====================\n",
 
+  "rofl_message_trigers": [".*гойда.*", ".*вторник.*"],
+
   "chanced": {
     "av sleep": {
       "text": "АВ ждёт тебя во сне с шансом в {chance_percent}%",

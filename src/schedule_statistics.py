@@ -13,7 +13,7 @@ def stat_day_update():
     users_stat = database.get_all_statistics()
     text_mes = str()
     for user in users_stat:
-        text_mes += messages.format_normal("stat", user=user.username, count_mes=user.count_messege, count_rofl=user.count_goida) + messages.get_text_sep()
+        text_mes += messages.format_normal("stat", user=user.username, count_mes=user.count_messege, count_rofl=user.count_rolfs) + messages.get_text_sep()
         database.zeroing_statistics(user.id)
 
     bot.bot.send_message(PODPOLYE_ID, text_mes)
