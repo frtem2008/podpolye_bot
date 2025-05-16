@@ -18,14 +18,15 @@
     ".*гойда.*",
     ".*вторник.*"
   ],
-  "chanced": {
+
+  "random": {
     "av sleep": {
       "text": "АВ ждёт тебя во сне с шансом в {chance_percent}%",
-      "chance": 0.1
+      "chance": 0.01
     },
     "av awake": {
       "text": "АВ ждёт тебя НА РАБОТЕ шансом в {chance}",
-      "chance": 0.1
+      "chance": 0.01
     },
     "pon": {
       "text": "Пон, ебать его за ногу!",

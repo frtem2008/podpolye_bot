@@ -6,64 +6,65 @@ from watchdog.observers import Observer
 
 from src.middleware.UserHandlers import bot_logger
 
-messages_dict = {}
-chanced_messages_dict = {}
+message_dict = {}
+random_messages = {}
 
 
 # TODO: Add reply option for normal messages too
-def format_normal(name: str, **kwargs):
+def format_normal(name: str, **kwargs) -> str:
     kwargs.update(messages_dict)
-    return messages_dict[name].format(**kwargs)
+    return message_dict[name].format(**kwargs)
 
 
-def format_chanced(name: str, **kwargs):
-    kwargs.update(chanced_messages_dict[name])
-    kwargs['chance_percent'] = chanced_messages_dict[name]['chance'] * 100
-    reply = chanced_messages_dict[name]['reply'] if 'reply' in chanced_messages_dict[name] else None
-    return chanced_messages_dict[name]['chance'], chanced_messages_dict[name]['text'].format(**kwargs), reply
+def format_random(name: str, **kwargs) -> tuple[float, str, bool]:
+    kwargs.update(random_messages[name])
+    kwargs['chance_percent'] = random_messages[name]['chance'] * 100
+    reply = random_messages[name]['reply'] if 'reply' in random_messages[name] else None
+    return random_messages[name]['chance'], random_messages[name]['text'].format(**kwargs), reply
 
 
-def is_conditional(name):
-    return "triggers" in chanced_messages_dict[name]
+def has_triggers(name) -> bool:
+    return "triggers" in random_messages[name]
 
 
-def triggers(name: str):
-    return chanced_messages_dict[name]['triggers']
+def triggers(name: str) -> dict[str, str]:
+    return random_messages[name]['triggers']
 
 
-def chancedNames():
-    return [m for m in chanced_messages_dict.keys()]
+def random_messages_names() -> list[str]:
+    return [m for m in random_messages.keys()]
 
 
-# TODO add picture, sticker, audio, etc triggers
-def process_triggers(params: dict):
+# TODO: add picture, sticker, audio, etc triggers
+def process_triggers(params: dict) -> None:
     if 'triggers' in params:
         if 'text matches' in params['triggers']:
+            # TODO: add regex compilation parameters (f.e. ignorecase)
             params['triggers']['regex'] = re.compile(params['triggers']['text matches'])
 
 
 def get_text_sep():
-    return messages_dict["text_sep"]
+    return message_dict["text_sep"]
 
 
 def get_rolfs_text_triggers():
-    return messages_dict["rolfs_message_triggers"]
+    return message_dict["rolfs_message_triggers"]
 
 
-def reload(name: str):
-    global messages_dict, chanced_messages_dict
+def reload() -> None:
+    global message_dict, random_messages
 
-    with open(f'./res/{name}.json') as f:
-        messages_dict = json.load(f)
-        chanced_messages_dict = messages_dict["chanced"]
-        for name, params in chanced_messages_dict.items():
+    with open(f'res/messages.json') as f:
+        message_dict = json.load(f)
+        random_messages = message_dict["random"]
+        for name, params in random_messages.items():
             bot_logger.info(f'Message name: {name}; send params: {params}')
             process_triggers(params)
 
-        chanced_messages_dict[name] = params
+        random_messages[name] = params
 
-    bot_logger.info(messages_dict)
-    bot_logger.info(chanced_messages_dict)
+    bot_logger.info(message_dict)
+    bot_logger.info(random_messages)
 
     bot_logger.info('Messages reloaded')
 
@@ -72,11 +73,11 @@ class MessagesUpdateHandler(FileSystemEventHandler):
     def on_modified(self, event):
         if event.src_path == 'res/messages.json':
             bot_logger.info(event)
-            reload('messages')
+            reload()
 
 
-if not messages_dict:
-    reload('messages')
+if not message_dict:
+    reload()
 
     observer = Observer()
     event_handler = MessagesUpdateHandler()

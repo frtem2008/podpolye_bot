@@ -14,7 +14,7 @@ def user_fmt(to_format: telebot.types.User | models.Users) -> str:
     return f'@{to_format.username}({to_format.id})'
 
 
-def get_title(bot: telebot.TeleBot, message: telebot.types.Message):
+def get_title(bot: telebot.TeleBot, message: telebot.types.Message) -> str | None:
     for admin in bot.get_chat_administrators(message.chat.id):
         if admin.user.id == message.from_user.id:
             return admin.custom_title
@@ -24,12 +24,16 @@ def get_title(bot: telebot.TeleBot, message: telebot.types.Message):
 user_titles = {}
 
 
-def import_users():
+def import_users() -> None:
     for user in database.get_users():
         user_titles[user.user_id] = None
 
 
-def userMessageHandler(bot: telebot.TeleBot, message: telebot.types.Message):
+def userMessageHandler(bot: telebot.TeleBot, update: telebot.types.Update) -> None:
+    message = update.message
+    if not message:
+        return
+
     title = get_title(bot, message)
     bot_logger.debug(f'Title for {user_fmt(message.from_user)}: {title}')
     user_id = message.from_user.id

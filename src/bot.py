@@ -5,6 +5,7 @@ from telebot.custom_filters import ChatFilter
 from res.credentials import BOT_TOKEN, PODPOLYE_ID
 from src.filters.filters import OneArgumentFilter, TwoArgumentsFilter
 from src.handlers.RoleHandlers import createRoleHandler, deleteRoleHandler, selfRollerHandler, selfUnrollerHandler, userRollerHandler, userUnrollerHandler, pingRoleHandler
+from src.middleware.TriggeredMessageHandler import triggeredMessageHandler
 from src.middleware.UserHandlers import userMessageHandler
 from src.handlers.stat_hendlers import printStatHendlers, staticticHendlers
 
@@ -12,22 +13,19 @@ apihelper.ENABLE_MIDDLEWARE = True
 
 bot = telebot.TeleBot(BOT_TOKEN, num_threads=5)
 
-
-def register_handlers():
-    bot.register_message_handler(createRoleHandler, commands=["createrole"], chat_id=[PODPOLYE_ID], pass_bot=True)
-    bot.register_message_handler(deleteRoleHandler, commands=["deleterole"], chat_id=[PODPOLYE_ID], pass_bot=True)
-    bot.register_message_handler(userRollerHandler, commands=["role"], twoarguments=True, chat_id=[PODPOLYE_ID], pass_bot=True)
-    bot.register_message_handler(userUnrollerHandler, commands=["unrole"], twoarguments=True, chat_id=[PODPOLYE_ID], pass_bot=True)
-    bot.register_message_handler(selfRollerHandler, commands=["role"], oneargument=True, chat_id=[PODPOLYE_ID], pass_bot=True)
-    bot.register_message_handler(selfUnrollerHandler, commands=["unrole"], oneargument=True, chat_id=[PODPOLYE_ID], pass_bot=True)
-    bot.register_message_handler(pingRoleHandler, commands=["ping"], oneargument=True, chat_id=[PODPOLYE_ID], pass_bot=True)
-    bot.register_message_handler(printStatHendlers, commands=["stat"], pass_bot=True, chat_id=[PODPOLYE_ID])
-
-bot.register_middleware_handler(userMessageHandler, update_types=['message'])
+bot.register_middleware_handler(userMessageHandler)
+bot.register_middleware_handler(triggeredMessageHandler)
 bot.register_middleware_handler(staticticHendlers, update_types=['message'])
 
 bot.add_custom_filter(ChatFilter())
 bot.add_custom_filter(OneArgumentFilter())
 bot.add_custom_filter(TwoArgumentsFilter())
 
-register_handlers()
+bot.register_message_handler(createRoleHandler, commands=["createrole"], chat_id=[PODPOLYE_ID], pass_bot=True)
+bot.register_message_handler(deleteRoleHandler, commands=["deleterole"], chat_id=[PODPOLYE_ID], pass_bot=True)
+bot.register_message_handler(userRollerHandler, commands=["role"], twoarguments=True, chat_id=[PODPOLYE_ID], pass_bot=True)
+bot.register_message_handler(userUnrollerHandler, commands=["unrole"], twoarguments=True, chat_id=[PODPOLYE_ID], pass_bot=True)
+bot.register_message_handler(selfRollerHandler, commands=["role"], oneargument=True, chat_id=[PODPOLYE_ID], pass_bot=True)
+bot.register_message_handler(selfUnrollerHandler, commands=["unrole"], oneargument=True, chat_id=[PODPOLYE_ID], pass_bot=True)
+bot.register_message_handler(pingRoleHandler, commands=["ping"], oneargument=True, chat_id=[PODPOLYE_ID], pass_bot=True)
+bot.register_message_handler(printStatHendlers, commands=["stat"], pass_bot=True, chat_id=[PODPOLYE_ID])
