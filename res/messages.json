@@ -12,13 +12,12 @@
   "unrole": "{user} is no more {role_name}",
   "ping": "PING {role_name}! {users}",
   "nobody to ping": "Nobody to ping for {role_name} :(",
-  "stat": "{user}:\n\tcount message: {count_mes}\n\tcount rofl: {count_rofl}",
-  "text_sep": "\n=====================\n",
-  "rolfs_message_triggers": [
+  "stat": "{user}:\n\tcount message: {message_count}\n\tcount rofl: {rofl_count}",
+  "text separator": "\n=====================\n",
+  "rofl triggers": [
     ".*гойда.*",
     ".*вторник.*"
   ],
-
   "random": {
     "av sleep": {
       "text": "АВ ждёт тебя во сне с шансом в {chance_percent}%",

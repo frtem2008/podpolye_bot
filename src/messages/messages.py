@@ -4,7 +4,7 @@ import re
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
-from src.middleware.UserHandlers import bot_logger
+from src.middleware.TitleHandler import bot_logger
 
 message_dict = {}
 random_messages = {}
@@ -12,7 +12,7 @@ random_messages = {}
 
 # TODO: Add reply option for normal messages too
 def format_normal(name: str, **kwargs) -> str:
-    kwargs.update(messages_dict)
+    kwargs.update(message_dict)
     return message_dict[name].format(**kwargs)
 
 
@@ -43,12 +43,12 @@ def process_triggers(params: dict) -> None:
             params['triggers']['regex'] = re.compile(params['triggers']['text matches'])
 
 
-def get_text_sep():
-    return message_dict["text_sep"]
+def text_separator() -> str:
+    return message_dict["text separator"]
 
 
-def get_rolfs_text_triggers():
-    return message_dict["rolfs_message_triggers"]
+def rofl_triggers() -> dict[str, str]:
+    return message_dict["rofl triggers"]
 
 
 def reload() -> None:
@@ -70,7 +70,7 @@ def reload() -> None:
 
 
 class MessagesUpdateHandler(FileSystemEventHandler):
-    def on_modified(self, event):
+    def on_modified(self, event) -> None:
         if event.src_path == 'res/messages.json':
             bot_logger.info(event)
             reload()

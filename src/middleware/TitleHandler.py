@@ -2,10 +2,10 @@ import logging
 
 import telebot
 
-from src import logsetup
+from src.logs import logsetup
 from src.models import models, database
 
-bot_logger = logsetup.new_logger('bot', logging.INFO)
+bot_logger = logsetup.new_logger('bot', logging.DEBUG)
 
 
 def user_fmt(to_format: telebot.types.User | models.Users) -> str:
@@ -15,9 +15,10 @@ def user_fmt(to_format: telebot.types.User | models.Users) -> str:
 
 
 def get_title(bot: telebot.TeleBot, message: telebot.types.Message) -> str | None:
-    for admin in bot.get_chat_administrators(message.chat.id):
-        if admin.user.id == message.from_user.id:
-            return admin.custom_title
+    # for admin in bot.get_chat_administrators(message.chat.id):
+    #     if admin.user.id == message.from_user.id:
+    #         return admin.custom_title
+    #
     return None
 
 
@@ -29,7 +30,7 @@ def import_users() -> None:
         user_titles[user.user_id] = None
 
 
-def userMessageHandler(bot: telebot.TeleBot, update: telebot.types.Update) -> None:
+def userTitleHandler(bot: telebot.TeleBot, update: telebot.types.Update) -> None:
     message = update.message
     if not message:
         return

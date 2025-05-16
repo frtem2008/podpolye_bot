@@ -23,10 +23,10 @@ class Roles(BaseModel):
 
 class UserStatistics(BaseModel):
     id = peewee.IntegerField(primary_key=True)
-    count_messege = peewee.IntegerField(null=True)
-    count_rolfs = peewee.IntegerField(null=True)
+    user_id = peewee.CharField(unique=True)
     username = peewee.CharField(unique=True)
+    message_count = peewee.IntegerField(null=True)
+    rofl_count = peewee.IntegerField(null=True)
 
 
 UserRoles = Roles.users.get_through_model()
-

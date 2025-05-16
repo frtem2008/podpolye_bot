@@ -3,8 +3,8 @@ import re
 
 import telebot
 
-from src import messages
-from src.middleware.UserHandlers import bot_logger
+from src.messages import messages
+from src.middleware.TitleHandler import bot_logger
 
 
 # TODO: политика проверки триггеров (any | all)

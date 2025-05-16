@@ -1,6 +1,6 @@
 import logging
 
-from src import logsetup
+from src.logs import logsetup
 from src.models import models
 from src.models.models import db, Users, Roles, UserRoles, UserStatistics
 
@@ -63,35 +63,34 @@ def delete_role(role: str) -> None:
     Roles.get(name=role).delete_instance()
 
 
-def count_mes_pl(user_id: int):
-    user = UserStatistics.get(id=user_id)
-    user.count_messege = 1 + user.count_messege
+### STATS ###
+# TODO: Split db functions to different files
+def inc_message_count(user_id: int):
+    user = UserStatistics.get(user_id=user_id)
+    user.message_count += 1
     user.save()
 
 
-def count_rofls_pl(user_id: int):
-    user = UserStatistics.get(id=user_id)
-    user.count_rolfs = 1 + user.count_rolfs
+def inc_rofl_count(user_id: int):
+    user = UserStatistics.get(user_id=user_id)
+    user.rofl_count += 1
     user.save()
 
 
-def get_statistics_by_id(id: int) -> UserStatistics | None:
-    return UserStatistics.get_or_none(id=id)
+def get_stats_by_id(user_id: int) -> UserStatistics | None:
+    return UserStatistics.get_or_none(user_id=user_id)
 
 
-def get_all_statistics() -> list[UserStatistics]:
+def get_all_stats() -> list[UserStatistics]:
     return list(UserStatistics.select())
 
 
-def zeroing_statistics(user_id: int):
-    user = UserStatistics.get(id=user_id)
-    user.count_messege = 0
-    user.count_rolfs = 0
+def reset_user_stats(user_id: int):
+    user = UserStatistics.get(user_id=user_id)
+    user.message_count = 0
+    user.rofl_count = 0
     user.save()
 
 
-def create_user_statistics(user_id: int, username: str):
-    return UserStatistics.create(id=user_id, count_messege=0, count_rolfs=0, username=username)
-
-
-
+def create_user_stats(user_id: int, username: str):
+    return UserStatistics.create(user_id=user_id, username=username, message_count=0, rofl_count=0)

@@ -1,7 +1,7 @@
 import telebot
 
-from src import messages
-from src.middleware.UserHandlers import user_fmt, bot_logger
+from src.messages import messages
+from src.middleware.TitleHandler import user_fmt, bot_logger
 from src.models import database
 from src.models.models import Users
 
