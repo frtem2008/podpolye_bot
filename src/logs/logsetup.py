@@ -15,8 +15,6 @@ if not os.path.exists(log_path):
     logging.basicConfig(format='[%(levelname) 5s/%(asctime)s] %(name)s: %(message)s', level=logging.WARNING)
     logging.getLogger('Log setup').info(f'Created log directory: {log_path}')
 
-
-# TODO: Add logger for each trigger
 def new_logger(name: str, level=LOG_LEVEL) -> logging.Logger:
     log = logging.Logger(name)
     log.setLevel(level)
