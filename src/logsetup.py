@@ -2,7 +2,7 @@ import datetime
 import logging
 import os
 
-log_path = f'../logs/{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
+log_path = f'logs/{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
 if not os.path.exists(log_path):
     os.makedirs(log_path)
     logging.basicConfig(format='[%(levelname) 5s/%(asctime)s] %(name)s: %(message)s', level=logging.WARNING)

@@ -29,14 +29,6 @@ def import_users():
         user_titles[user.user_id] = None
 
 
-def goida_in_message(mes: telebot.types.Message):
-    if type(mes.text) == type(" "):
-        text = mes.text.lower()
-        if "гойда" in text:
-            return True
-        return False
-
-
 def userMessageHandler(bot: telebot.TeleBot, message: telebot.types.Message):
     title = get_title(bot, message)
     bot_logger.debug(f'Title for {user_fmt(message.from_user)}: {title}')

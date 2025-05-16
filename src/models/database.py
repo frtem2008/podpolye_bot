@@ -8,6 +8,7 @@ logger = logsetup.new_logger('Database', logging.INFO)
 
 
 def init_db():
+    logger.warning("Set working directory to project root for database to work!")
     db.connect()
     db.create_tables([models.Users, models.Roles, models.UserRoles, models.UserStatistics], safe=True)
     logger.info('Database initialized')
