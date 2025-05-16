@@ -4,10 +4,12 @@ import re
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
-from src.middleware.TitleHandler import bot_logger
+from src.logs import logsetup
 
 message_dict = {}
 random_messages = {}
+
+log = logsetup.new_logger('Message loader')
 
 
 # TODO: Add reply option for normal messages too
@@ -58,21 +60,21 @@ def reload() -> None:
         message_dict = json.load(f)
         random_messages = message_dict["random"]
         for name, params in random_messages.items():
-            bot_logger.info(f'Message name: {name}; send params: {params}')
+            log.debug(f'Message name: {name}; send params: {params}')
             process_triggers(params)
 
         random_messages[name] = params
 
-    bot_logger.info(message_dict)
-    bot_logger.info(random_messages)
+    log.debug(message_dict)
+    log.debug(random_messages)
 
-    bot_logger.info('Messages reloaded')
+    log.info('Messages reloaded')
 
 
 class MessagesUpdateHandler(FileSystemEventHandler):
     def on_modified(self, event) -> None:
         if event.src_path == 'res/messages.json':
-            bot_logger.info(event)
+            log.debug(f'Filesystem event handler: {event}')
             reload()
 
 

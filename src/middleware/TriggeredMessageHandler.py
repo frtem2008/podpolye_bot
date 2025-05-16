@@ -3,15 +3,17 @@ import re
 
 import telebot
 
+from src.logs import logsetup
 from src.messages import messages
-from src.middleware.TitleHandler import bot_logger
+
+log = logsetup.new_logger('Triggered message handler')
 
 
 # TODO: политика проверки триггеров (any | all)
 def check_triggers(name: str, message: telebot.types.Message) -> bool:
-    bot_logger.info(f'Checking triggers for {name} on {message.text}')
+    log.debug(f'Checking triggers for {name} on {message.text}')
     if not messages.has_triggers(name):
-        bot_logger.info(f'Message {name} has no triggers')
+        log.debug(f'Message {name} has no triggers')
         return True
 
     triggered = []
@@ -19,10 +21,10 @@ def check_triggers(name: str, message: telebot.types.Message) -> bool:
 
     if 'text matches' in triggers:
         if re.search(triggers['regex'], message.text):
-            bot_logger.info(f'Text match triggered on {message.text}')
+            log.debug(f'Text match triggered on {message.text}')
             triggered.append(True)
         else:
-            bot_logger.info(f'Text match not triggered on {message.text}')
+            log.debug(f'Text match not triggered on {message.text}')
     # TODO: add more triggers
 
     return all(triggered) if triggered else False
@@ -35,7 +37,7 @@ def send_by_chance(bot: telebot.TeleBot, message: telebot.types.Message, name: s
             bot.reply_to(message, text)
         else:
             bot.send_message(message.chat.id, text)
-        bot_logger.info(f'Sent chanced message {text} to {message.chat.id}')
+        log.info(f'Sent random message {text} with probability of {chance} to {message.chat.id}')
 
 
 def triggeredMessageHandler(bot: telebot.TeleBot, update: telebot.types.Update) -> None:

@@ -1,14 +1,17 @@
 import telebot
 
+from src.logs import logsetup
 from src.messages import messages
-from src.middleware.TitleHandler import user_fmt, bot_logger
+from src.logs.logsetup import user_fmt
 from src.models import database
 from src.models.models import Users
-
 
 # TODO: Права доступа
 # TODO: Заменить все проверки на регулярки
 # TODO: Сообщения об ошибках в пользовательском вводе
+# TODO: Пинг роли через @role_name помимо /ping == обработка нескольких пингов в одном сообщении
+log = logsetup.new_logger('Role handler')
+
 
 def link_to(user: Users) -> str:
     return f'[@{user.username}](tg://user?id={user.user_id})'
@@ -23,12 +26,12 @@ def exists(
         send_username_message=True, send_role_message=True
 ) -> bool:
     if username and not database.get_user(username):
-        bot_logger.info(f"User {username} not found")
+        log.info(f"User {username} not found")
         if send_username_message:
             send_message(bot, message.chat.id, 'user not found', username=username)
         return False
     if role_name and not database.get_role(role_name):
-        bot_logger.info(f"Role {role_name} does not exist")
+        log.info(f"Role {role_name} does not exist")
         if send_role_message:
             send_message(bot, message.chat.id, 'role does not exist', role_name=role_name)
         return False
@@ -42,12 +45,12 @@ def role(bot: telebot.TeleBot, message: telebot.types.Message, username: str, ro
 
     user = database.get_user(username)
     if role_name in database.get_user_role_names(user.user_id):
-        bot_logger.info(f"User {user_fmt(user)} already has role {role_name}")
+        log.info(f"User {user_fmt(user)} already has role {role_name}")
         send_message(bot, message.chat.id, 'user already has role', user=link_to(user), role_name=role_name)
         return
 
     database.give_role(user.user_id, role_name)
-    bot_logger.info(f"Gave role {role_name} to user {user_fmt(user)}")
+    log.info(f"Gave role {role_name} to user {user_fmt(user)}")
     send_message(bot, message.chat.id, 'role', user=link_to(user), role_name=role_name)
 
 
@@ -57,12 +60,12 @@ def unrole(bot: telebot.TeleBot, message: telebot.types.Message, username: str, 
         return
     user = database.get_user(username)
     if not role_name in database.get_user_role_names(user.user_id):
-        bot_logger.info(f"User {user_fmt(user)} does not have role {role_name}")
+        log.info(f"User {user_fmt(user)} does not have role {role_name}")
         send_message(bot, message.chat.id, 'user does not have role', user=link_to(user), role_name=role_name)
         return
 
     database.remove_role(user.user_id, role_name)
-    bot_logger.info(f"Removed role {role_name} from user {user_fmt(user)}")
+    log.info(f"Removed role {role_name} from user {user_fmt(user)}")
     send_message(bot, message.chat.id, 'unrole', user=link_to(user), role_name=role_name)
 
 
@@ -70,11 +73,12 @@ def createRoleHandler(message: telebot.types.Message, bot: telebot.TeleBot) -> N
     role_name = telebot.util.extract_arguments(message.text).strip()
     if exists(bot, message, None, role_name, send_role_message=False):
         send_message(bot, message.chat.id, 'role already exists', role_name=role_name)
+        log.info(f'Role {role_name} already exists')
         return
 
     database.create_role(role_name)
     send_message(bot, message.chat.id, 'role created', role_name=role_name)
-    bot_logger.info(f"Created role {role_name}")
+    log.info(f"Created role {role_name}")
 
 
 def deleteRoleHandler(message: telebot.types.Message, bot: telebot.TeleBot) -> None:
@@ -83,7 +87,7 @@ def deleteRoleHandler(message: telebot.types.Message, bot: telebot.TeleBot) -> N
         return
     database.delete_role(role_name)
     send_message(bot, message.chat.id, 'role deleted', role_name=role_name)
-    bot_logger.info(f"Deleted role {role_name}")
+    log.info(f"Deleted role {role_name}")
 
 
 def selfRollerHandler(message: telebot.types.Message, bot: telebot.TeleBot) -> None:
@@ -117,8 +121,8 @@ def pingRoleHandler(message: telebot.types.Message, bot: telebot.TeleBot) -> Non
         users += link_to(user) + ' '
 
     if users:
-        bot_logger.info(f"Ping message for {role_name}: {users}")
+        log.info(f"Pinging {role_name}: {users}")
         send_message(bot, message.chat.id, 'ping', role_name=role_name, users=users.strip())
     else:
-        bot_logger.info(f"Nobody to ping for {role_name}")
+        log.info(f"Nobody to ping for {role_name}")
         send_message(bot, message.chat.id, 'nobody to ping', role_name=role_name)

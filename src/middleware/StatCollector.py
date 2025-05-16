@@ -2,9 +2,12 @@ import re
 
 import telebot
 
+from src.logs import logsetup
 from src.messages import messages
-from src.middleware.TitleHandler import bot_logger, user_fmt
+from src.logs.logsetup import user_fmt
 from src.models import database
+
+log = logsetup.new_logger('Stat collector')
 
 
 def statCollector(bot: telebot.TeleBot, message: telebot.types.Message) -> None:
@@ -14,16 +17,17 @@ def statCollector(bot: telebot.TeleBot, message: telebot.types.Message) -> None:
 
     if not user:
         database.create_user_stats(user_id, message.from_user.username)
-        bot_logger.debug(f"created stats for {user_fmt(message.from_user)}")
+        log.info(f"Created stats for {user_fmt(message.from_user)}")
 
     database.inc_message_count(user_id)
-    bot_logger.debug(f"user {user_fmt(message.from_user)} message")
+    log.debug(f"User {user_fmt(message.from_user)} message count incremented")
 
     if not message.text:
         return
 
+    # TODO: compile rofl triggers with message triggers on json reload
     for trigger in messages.rofl_triggers():
-        bot_logger.debug(f"trigger {trigger}, text: {message.text}")
+        log.debug(f"Checking rofl trigger {trigger} for message text: {message.text}")
         if re.search(re.compile(trigger), message.text):
             database.inc_rofl_count(user_id)
-            bot_logger.debug(f"user {message.from_user.username} rofl++")
+            log.debug(f"user {message.from_user.username} rofl++")

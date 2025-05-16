@@ -1,4 +1,3 @@
-import logging
 import time
 from multiprocessing import *
 
@@ -10,7 +9,8 @@ from src.logs import logsetup
 from src.messages import messages
 from src.models import database
 
-main_logger = logsetup.new_logger('schedule', logging.DEBUG)
+log = logsetup.new_logger('Stats reset')
+
 
 # TODO: Add better and unified support for scheduling
 
@@ -24,7 +24,7 @@ def reset_daily_stats():
         database.reset_user_stats(user.id)
     # TODO: Support for more groups (read chats to send daily stats from messages.json)
     bot.bot.send_message(PODPOLYE_ID, text_mes)
-    main_logger.debug('Daily stats reset')
+    log.info('Daily stats reset')
 
 
 def start_schedule():
@@ -37,4 +37,4 @@ def start_schedule():
 
 def start_process():
     Process(target=start_schedule, args=()).start()
-    main_logger.debug('Reset daily stats process scheduled')
+    log.info('Reset daily stats process scheduled')

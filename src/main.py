@@ -1,5 +1,3 @@
-import logging
-
 from src import bot
 from src.logs import logsetup
 from src.middleware import TitleHandler
@@ -10,7 +8,7 @@ if __name__ == '__main__':
     database.init_db()
     TitleHandler.import_users()
 
-    main_logger = logsetup.new_logger('main', logging.DEBUG)
+    main_logger = logsetup.new_logger('Main')
     main_logger.info("Bot started")
 
     # TODO: scheduling does not work with bot updates
