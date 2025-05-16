@@ -1,12 +1,11 @@
-from email import message
+import re
 
 import telebot
 from src.middleware.UserHandlers import user_fmt, bot_logger
 from src.models import database
 from src import messages
 
-
-def staticticHendlers(message: telebot.types.Message, bot: telebot.TeleBot) -> None:
+def staticticHendlers(bot: telebot.TeleBot, message: telebot.types.Message) -> None:
     user_id = message.from_user.id
 
     user = database.get_statistics_by_id(user_id)
@@ -18,7 +17,10 @@ def staticticHendlers(message: telebot.types.Message, bot: telebot.TeleBot) -> N
     database.count_mes_pl(user_id)
     bot_logger.debug(f"user {message.from_user.username} messege++")
 
-
+    for trigger in messages.get_rolfs_text_triggers():
+        if re.search(re.compile(trigger), message.text):
+            database.count_rofls_pl(user_id)
+            bot_logger.debug(f"user {message.from_user.username} rofl++")
 
 def printStatHendlers(mes: telebot.types.Message, bot: telebot.TeleBot):
     statistic = database.get_statistics_by_id(mes.from_user.id)

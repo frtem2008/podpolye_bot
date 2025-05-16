@@ -14,7 +14,7 @@
   "stat": "{user}:\n\tcount message: {count_mes}\n\tcount rofl: {count_rofl}",
   "text_sep": "\n=====================\n",
 
-  "rofl_message_trigers": [".*гойда.*", ".*вторник.*"],
+  "rolfs_message_triggers": [".*гойда.*", ".*вторник.*"],
 
   "chanced": {
     "av sleep": {

@@ -22,10 +22,9 @@ def register_handlers():
     bot.register_message_handler(selfUnrollerHandler, commands=["unrole"], oneargument=True, chat_id=[PODPOLYE_ID], pass_bot=True)
     bot.register_message_handler(pingRoleHandler, commands=["ping"], oneargument=True, chat_id=[PODPOLYE_ID], pass_bot=True)
     bot.register_message_handler(printStatHendlers, commands=["stat"], pass_bot=True, chat_id=[PODPOLYE_ID])
-    bot.register_message_handler(staticticHendlers, chat_id=[PODPOLYE_ID], pass_bot=True)
-
 
 bot.register_middleware_handler(userMessageHandler, update_types=['message'])
+bot.register_middleware_handler(staticticHendlers, update_types=['message'])
 
 bot.add_custom_filter(ChatFilter())
 bot.add_custom_filter(OneArgumentFilter())

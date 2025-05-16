@@ -46,6 +46,10 @@ def get_text_sep():
     return messages_dict["text_sep"]
 
 
+def get_rolfs_text_triggers():
+    return messages_dict["rolfs_message_triggers"]
+
+
 def reload(name: str):
     global messages_dict, chanced_messages_dict
 
