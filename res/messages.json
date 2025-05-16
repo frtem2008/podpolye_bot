@@ -11,11 +11,13 @@
   "role": "{user} is now {role_name}",
   "unrole": "{user} is no more {role_name}",
   "ping": "PING {role_name}! {users}",
+  "nobody to ping": "Nobody to ping for {role_name} :(",
   "stat": "{user}:\n\tcount message: {count_mes}\n\tcount rofl: {count_rofl}",
   "text_sep": "\n=====================\n",
-
-  "rolfs_message_triggers": [".*гойда.*", ".*вторник.*"],
-
+  "rolfs_message_triggers": [
+    ".*гойда.*",
+    ".*вторник.*"
+  ],
   "chanced": {
     "av sleep": {
       "text": "АВ ждёт тебя во сне с шансом в {chance_percent}%",
