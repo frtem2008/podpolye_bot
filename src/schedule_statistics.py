@@ -1,6 +1,7 @@
 import bot
 import schedule
 import time
+import logging
 
 import logsetup
 from src.models import database
