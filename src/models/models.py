@@ -1,6 +1,6 @@
 import peewee
 
-db = peewee.SqliteDatabase('../res/database.db')
+db = peewee.SqliteDatabase('./res/database.db')
 
 
 class BaseModel(peewee.Model):
@@ -21,4 +21,12 @@ class Roles(BaseModel):
     users = peewee.ManyToManyField(Users, backref='roles')
 
 
+class UserStatistics(BaseModel):
+    id = peewee.IntegerField(primary_key=True)
+    count_messege = peewee.IntegerField(null=True)
+    count_goida = peewee.IntegerField(null=True)
+    username = peewee.CharField(unique=True)
+
+
 UserRoles = Roles.users.get_through_model()
+

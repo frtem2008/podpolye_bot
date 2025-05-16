@@ -75,8 +75,19 @@ def count_goida_pl(user_id: int):
     user.save()
 
 
-def get_statistics():
-    return UserStatistics.select()
+def get_statistics_by_id(id: int) -> UserStatistics:
+    return UserStatistics.get(id=id)
+
+
+def get_all_statistics() -> list[UserStatistics]:
+    return list(UserStatistics.select())
+
+
+def zeroing_statistics(user_id: int):
+    user = UserStatistics.get(id=user_id)
+    user.count_messege = 0
+    user.count_goida = 0
+    user.save()
 
 
 def create_user_statistics(user_id: int, username: str):

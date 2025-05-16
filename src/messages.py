@@ -10,19 +10,14 @@ messages_dict = {}
 chanced_messages_dict = {}
 
 
-def edit_kwags(j: dict, kwargs: dict):
-    for item in j.items():
-        kwargs[item[0]] = item[1]
-
-
 # TODO: Add reply option for normal messages too
 def format_normal(name: str, **kwargs):
-    edit_kwags(messages_dict, kwargs)
+    kwargs.update(messages_dict)
     return messages_dict[name].format(**kwargs)
 
 
 def format_chanced(name: str, **kwargs):
-    edit_kwags(chanced_messages_dict[name], kwargs)
+    kwargs.update(chanced_messages_dict[name])
     kwargs['chance_percent'] = chanced_messages_dict[name]['chance'] * 100
     reply = chanced_messages_dict[name]['reply'] if 'reply' in chanced_messages_dict[name] else None
     return chanced_messages_dict[name]['chance'], chanced_messages_dict[name]['text'].format(**kwargs), reply
@@ -45,6 +40,10 @@ def process_triggers(params: dict):
     if 'triggers' in params:
         if 'text matches' in params['triggers']:
             params['triggers']['regex'] = re.compile(params['triggers']['text matches'])
+
+
+def get_text_sep():
+    return messages_dict["text_sep"]
 
 
 def reload(name: str):
