@@ -20,7 +20,7 @@ def stat_day_update():
 
 
 def start_schedule():
-    schedule.every().day.at("0:00").do(stat_day_update)
+    schedule.every().day.at("00:00").do(stat_day_update)
 
     while True:
         schedule.run_pending()
