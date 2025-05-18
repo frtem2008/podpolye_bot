@@ -53,6 +53,10 @@ def rofl_triggers() -> dict[str, str]:
     return message_dict["rofl triggers"]
 
 
+def daly_statistics_message():
+    return message_dict["daly statistics message"]
+
+
 def reload() -> None:
     global message_dict, random_messages
 

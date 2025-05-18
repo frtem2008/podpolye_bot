@@ -16,12 +16,12 @@ log = logsetup.new_logger('Stats reset')
 
 def reset_daily_stats():
     users_stat = database.get_all_stats()
-    text_mes = ''
+    text_mes = messages.daly_statistics_message() + messages.text_separator()
     for user in users_stat:
         text_mes += messages.format_normal(
             "stat", user=user.username, message_count=user.message_count, rofl_count=user.rofl_count
         ) + messages.text_separator()
-        database.reset_user_stats(user.id)
+        database.reset_user_stats(user.user_id)
     # TODO: Support for more groups (read chats to send daily stats from messages.json)
     bot.bot.send_message(PODPOLYE_ID, text_mes)
     log.info('Daily stats reset')
@@ -34,7 +34,3 @@ def start_schedule():
         schedule.run_pending()
         time.sleep(1)
 
-
-def start_process():
-    Process(target=start_schedule, args=()).start()
-    log.info('Reset daily stats process scheduled')
