@@ -8,6 +8,8 @@ log = logsetup.new_logger('Title handler')
 
 
 def get_title(bot: telebot.TeleBot, message: telebot.types.Message) -> str | None:
+    if message.chat.type == 'private': return None
+
     for admin in bot.get_chat_administrators(message.chat.id):
         if admin.user.id == message.from_user.id:
             return admin.custom_title

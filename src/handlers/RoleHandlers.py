@@ -10,6 +10,8 @@ from src.models.models import Users
 # TODO: Заменить все проверки на регулярки
 # TODO: Сообщения об ошибках в пользовательском вводе
 # TODO: Пинг роли через @role_name помимо /ping == обработка нескольких пингов в одном сообщении
+# TODO: Изменить @GroupAnonimousBot на юзернейм из креденшалов
+# TODO: Сколько борис сказал чайки и тп
 log = logsetup.new_logger('Role handler')
 
 
@@ -110,11 +112,7 @@ def userUnrollerHandler(message: telebot.types.Message, bot: telebot.TeleBot) ->
     unrole(bot, message, username, role_name)
 
 
-def pingRoleHandler(message: telebot.types.Message, bot: telebot.TeleBot) -> None:
-    role_name = telebot.util.extract_arguments(message.text).strip()
-    if not exists(bot, message, None, role_name):
-        return
-
+def ping(role_name: str, message: telebot.types.Message, bot: telebot.TeleBot) -> None:
     to_ping = database.get_role_users(role_name)
     users = ''
     for user in to_ping:
@@ -126,3 +124,20 @@ def pingRoleHandler(message: telebot.types.Message, bot: telebot.TeleBot) -> Non
     else:
         log.info(f"Nobody to ping for {role_name}")
         send_message(bot, message.chat.id, 'nobody to ping', role_name=role_name)
+
+
+def pingAtRoleHandler(message: telebot.types.Message, bot: telebot.TeleBot) -> None:
+    role_name = message.text.strip().removeprefix('@')
+    # Check if we are pinging a regular user
+    if exists(bot, message, role_name, None, send_username_message=False):
+        return
+    if not exists(bot, message, None, role_name):
+        return
+    ping(role_name, message, bot)
+
+
+def pingCommandRoleHandler(message: telebot.types.Message, bot: telebot.TeleBot) -> None:
+    role_name = telebot.util.extract_arguments(message.text).strip()
+    if not exists(bot, message, None, role_name):
+        return
+    ping(role_name, message, bot)

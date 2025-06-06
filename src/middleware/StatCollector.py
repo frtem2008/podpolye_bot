@@ -16,6 +16,7 @@ def statCollector(bot: telebot.TeleBot, message: telebot.types.Message) -> None:
     user = database.get_stats_by_id(user_id)
 
     if not user:
+        log.debug(message.from_user)
         database.create_user_stats(user_id, message.from_user.username)
         log.info(f"Created stats for {user_fmt(message.from_user)}")
 

@@ -1,7 +1,7 @@
 {
   "start": "Я родился!",
   "help": "Тут будет справка, когда мне не будет лень",
-  "role created": "Создана роль {role_name}\nУпомянуть: /ping {role_name}\nВыдать роль: /role {role_name} @никнейм",
+  "role created": "Создана роль {role_name}\nУпомянуть: /ping {role_name}\nВыдать роль: /role @никнейм {role_name}",
   "role deleted": "Роль {role_name} была удалена",
   "role already exists": "Роль {role_name} уже существует",
   "role does not exist": "Роль {role_name} не существует(\nВведите /createrole {role_name}, чтобы её создать",
@@ -30,9 +30,9 @@
     },
     "pon": {
       "text": "Пон, ебать его за ногу!",
-      "chance": 1,
+      "chance": 0.01,
       "triggers": {
-        "text matches": ".*пон.*"
+        "text matches": ".*[Пп]он.*"
       },
       "reply": true
     }

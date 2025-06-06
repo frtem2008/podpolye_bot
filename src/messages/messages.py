@@ -12,6 +12,8 @@ random_messages = {}
 log = logsetup.new_logger('Message loader')
 
 
+# TODO: Different versions of pon based of chances (surely happends vs chance happening)
+
 # TODO: Add reply option for normal messages too
 def format_normal(name: str, **kwargs) -> str:
     kwargs.update(message_dict)

@@ -11,7 +11,7 @@ class BaseModel(peewee.Model):
 class Users(BaseModel):
     id = peewee.IntegerField(primary_key=True)
     user_id = peewee.IntegerField(unique=True)
-    username = peewee.CharField(unique=True)
+    username = peewee.CharField(unique=True, null=True)
     admin_title = peewee.CharField(null=True)
 
 
@@ -24,7 +24,7 @@ class Roles(BaseModel):
 class UserStatistics(BaseModel):
     id = peewee.IntegerField(primary_key=True)
     user_id = peewee.CharField(unique=True)
-    username = peewee.CharField(unique=True)
+    username = peewee.CharField(unique=True, null=True)
     message_count = peewee.IntegerField(null=True)
     rofl_count = peewee.IntegerField(null=True)
 

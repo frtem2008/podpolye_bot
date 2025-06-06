@@ -14,3 +14,12 @@ class TwoArgumentsFilter(SimpleCustomFilter):
 
     def check(self, message: telebot.types.Message) -> bool:
         return len(telebot.util.extract_arguments(message.text).strip().split()) == 2
+
+
+class RolePingFilter(SimpleCustomFilter):
+    key = 'roleping'
+
+    def check(self, message: telebot.types.Message) -> bool:
+        return (message.text
+                and message.text.strip().count(' ') == 0
+                and message.text.startswith('@'))
