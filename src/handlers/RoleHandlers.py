@@ -1,8 +1,8 @@
 import telebot
 
 from src.logs import logsetup
-from src.messages import messages
 from src.logs.logsetup import user_fmt
+from src.messages import messages
 from src.models import database
 from src.models.models import Users
 

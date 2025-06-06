@@ -1,9 +1,10 @@
+import threading
+
 from src import bot
 from src.logs import logsetup
 from src.middleware import TitleHandler
 from src.models import database
 from src.scheduled.resetStats import start_schedule
-import threading
 
 if __name__ == '__main__':
     database.init_db()

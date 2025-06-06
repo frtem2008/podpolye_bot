@@ -34,7 +34,7 @@ def triggers(name: str) -> dict[str, str]:
 
 
 def random_messages_names() -> list[str]:
-    return [m for m in random_messages.keys()]
+    return [*random_messages]
 
 
 # TODO: add picture, sticker, audio, etc triggers
@@ -53,8 +53,8 @@ def rofl_triggers() -> dict[str, str]:
     return message_dict["rofl triggers"]
 
 
-def daly_statistics_message():
-    return message_dict["daly statistics message"]
+def daily_statistics_message() -> str:
+    return message_dict["daily statistics message"]
 
 
 def reload() -> None:

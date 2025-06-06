@@ -1,5 +1,4 @@
 import time
-from multiprocessing import *
 
 import schedule
 
@@ -16,7 +15,7 @@ log = logsetup.new_logger('Stats reset')
 
 def reset_daily_stats():
     users_stat = database.get_all_stats()
-    text_mes = messages.daly_statistics_message() + messages.text_separator()
+    text_mes = messages.daily_statistics_message() + messages.text_separator()
     for user in users_stat:
         text_mes += messages.format_normal(
             "stat", user=user.username, message_count=user.message_count, rofl_count=user.rofl_count
@@ -33,4 +32,3 @@ def start_schedule():
     while True:
         schedule.run_pending()
         time.sleep(1)
-

@@ -3,8 +3,8 @@ import re
 import telebot
 
 from src.logs import logsetup
-from src.messages import messages
 from src.logs.logsetup import user_fmt
+from src.messages import messages
 from src.models import database
 
 log = logsetup.new_logger('Stat collector')

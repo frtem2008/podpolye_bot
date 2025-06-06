@@ -14,8 +14,7 @@
   "nobody to ping": "Nobody to ping for {role_name} :(",
   "stat": "{user}:\n\tcount message: {message_count}\n\tcount rofl: {rofl_count}",
   "text separator": "\n=====================\n",
-  "daly statistics message" : "Daly statistics: \n",
-
+  "daily statistics message": "Daily statistics: \n",
   "rofl triggers": [
     ".*гойда.*",
     ".*вторник.*"
